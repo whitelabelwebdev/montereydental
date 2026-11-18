@@ -402,7 +402,7 @@ h3 { font: 600 20px/1.3 var(--sans); color: var(--ink); }
   .sat-in b { font-size: 22px; }
   .promise-row { grid-template-columns: 1fr; }
   .helper-ui { grid-template-columns: minmax(0, 1fr); }
-  .ho-ctas .btn, .sec-head .btn { white-space: normal; text-align: center; }
+  .btn { white-space: normal; text-align: center; }
   .helper-out { position: static; min-height: 0; }
   .why-media { padding: 0 0 60px 0; }
   .why-badge { width: 104px; height: 104px; right: 10px; bottom: 16px; }
