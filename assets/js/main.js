@@ -14,7 +14,7 @@
   function setMenu(open) { burger.setAttribute('aria-expanded', String(open)); burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); drawer.hidden = !open; }
   burger.addEventListener('click', function () { setMenu(drawer.hidden); });
   drawer.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
-  window.addEventListener('resize', function () { if (window.innerWidth > 1000) setMenu(false); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 1080) setMenu(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !drawer.hidden) { setMenu(false); burger.focus(); } });
 
   // Inner pages are not built yet
@@ -25,6 +25,26 @@
   function setPaused(p) { if (p) vid.pause(); else vid.play(); vb.setAttribute('aria-pressed', String(p)); vb.setAttribute('aria-label', p ? 'Play video' : 'Pause video'); }
   if (reduce) { vid.removeAttribute('autoplay'); setPaused(true); }
   vb.addEventListener('click', function () { setPaused(!vid.paused); });
+
+  // Hero numbers count up on load and each time they come back into view
+  var cnts = $$('.cnt');
+  function runCount() {
+    cnts.forEach(function (el) {
+      var to = parseFloat(el.dataset.to), dec = +(el.dataset.dec || 0);
+      if (reduce) { el.textContent = to.toFixed(dec); return; }
+      var t0 = null;
+      (function step(t) {
+        if (!t0) t0 = t;
+        var p = Math.min((t - t0) / 1800, 1), v = to * (1 - Math.pow(1 - p, 3));
+        el.textContent = v.toFixed(dec);
+        if (p < 1) requestAnimationFrame(step);
+      })(performance.now());
+    });
+  }
+  var proof = $('.hero-proof');
+  if (proof && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) setTimeout(runCount, 300); }); }, { threshold: .4 }).observe(proof);
+  } else { runCount(); }
 
   // Symptom helper: each prompt points to a service described on montereydental.ca
   var H = [
