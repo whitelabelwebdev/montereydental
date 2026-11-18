@@ -47,27 +47,21 @@
   } else { runCount(); }
 
   // Symptom helper: each prompt points to a service described on montereydental.ca
-  var H = [
-    ['Emergency Dentistry', 'Same day emergency care', 'We reserve time in our daily schedule for dental emergencies and will accommodate both existing patients and those that are unable to see their regular dentist promptly.'],
-    ['Dental Implants & Dentures', 'Replace missing teeth', 'Missing one or more teeth? Dental Implant’s function and look like natural teeth; it’s tough to tell them apart. Dentures are an excellent, affordable removable tooth replacement option.'],
-    ['Root Canals', 'Relief for sore teeth', 'Suffering pain? You may need a Root Canal. Let our team take care of you and make you feel comfortable.'],
-    ['Dentures', 'Our onsite Denturist can help', 'Dentures are an excellent, affordable removable tooth replacement option. Our onsite Denturist, Franco Disciglio, can help.'],
-    ['Cosmetic Dentistry & Invisalign®', 'An awesome new smile', 'Let our NE Calgary Dentists fix or give you an awesome new smile. Ask for a cosmetic consultation today, or request a complimentary Invisalign® Consultation.'],
-    ['Cosmetic Injectables', 'Therapeutic and cosmetic options', 'Headaches? Jaw Pain? Crow’s Feet? Facial Lines? Our dentists offer both therapeutic and cosmetic injectable options.'],
-    ['Children’s Dentistry', 'Kids are always welcome', 'Yes, our dental team welcomes children of all ages. We love having them around. We do our best to keep our office as child-friendly as possible.'],
-    ['Dental Hygiene & Teeth Cleaning', 'No one’s judging you', 'Even if it’s been years since you last visited a dentist in Calgary, no one’s judging you. Rest assured that you’ll receive complete attention from our friendly, welcoming Monterey Dentists.']
-  ];
-  var out = $('.helper-out'), tag = $('[data-ho-tag]'), ttl = $('[data-ho-title]'), txt = $('[data-ho-text]');
-  var tabs = $$('.helper-list button');
+  var panel = $('.hx-panel'), tag = $('[data-ho-tag]'), ttl = $('[data-ho-title]'), txt = $('[data-ho-text]'), pic = $('[data-hx-img]'), cta = $('[data-ho-cta]');
+  var tabs = $$('.hx-tile');
+  function pick(b) {
+    tabs.forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
+    tag.innerHTML = b.dataset.tag; ttl.textContent = b.dataset.title; txt.textContent = b.dataset.text; pic.src = b.dataset.img;
+    if (b.dataset.cta === 'tel') { cta.href = 'tel:+14032937818'; cta.textContent = 'Call (403) 293-7818'; }
+    else { cta.href = '#book'; cta.textContent = 'Book this visit'; }
+    panel.classList.remove('swap'); void panel.offsetWidth; panel.classList.add('swap');
+    if (window.innerWidth <= 1080) panel.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
+  }
   tabs.forEach(function (b, i) {
-    b.addEventListener('click', function () {
-      tabs.forEach(function (x) { x.setAttribute('aria-selected', String(x === b)); });
-      tag.textContent = H[i][0]; ttl.textContent = H[i][1]; txt.textContent = H[i][2];
-      out.classList.remove('swap'); void out.offsetWidth; out.classList.add('swap');
-    });
+    b.addEventListener('click', function () { pick(b); });
     b.addEventListener('keydown', function (e) {
-      var k = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
-      if (k) { e.preventDefault(); var n = tabs[(i + k + tabs.length) % tabs.length]; n.focus(); n.click(); }
+      var k = (e.key === 'ArrowDown' || e.key === 'ArrowRight') ? 1 : (e.key === 'ArrowUp' || e.key === 'ArrowLeft') ? -1 : 0;
+      if (k) { e.preventDefault(); var n = tabs[(i + k + tabs.length) % tabs.length]; n.focus(); pick(n); }
     });
   });
 
