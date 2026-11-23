@@ -158,5 +158,5 @@
 }
 @media (max-width: 380px) {
   .lp-hdr .lp-tel { font-size: 13.5px; }
-  .lp-hdr .brand img { width: 128px; }
+  .lp-hdr .brand img { height: 44px; }
 }
